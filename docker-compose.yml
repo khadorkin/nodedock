@@ -13,9 +13,6 @@ services:
     depends_on:
       - mysql
       - elasticsearch
-    links:
-      - mysql
-      - elasticsearch
     ports:
       - "3000:3000"
   mysql:
@@ -33,8 +30,22 @@ services:
       - elasticsearch:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
+  kibana:
+    build: ./kibana
+    environment:
+       - ELASTICSEARCH_URL=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+  redis:
+    build: ./redis
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
 volumes:
   mysql:
     driver: "local"
   elasticsearch:
+    driver: "local"
+  redis:
     driver: "local"
